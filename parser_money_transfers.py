@@ -1,10 +1,8 @@
+"""Money Transfer Parser"""
 import os
-import zipcodes
 import re
-import json
-import base_parser
-import sys
 import csv
+import base_parser
 # import OCR
 from colordict import color_dict
   
@@ -65,22 +63,14 @@ class MoneyTransfers:
         """finds money value"""
         # find with digit and decimal
         for i in re.finditer(r"\d{1,3}(?:,\d{3})*(?:\.\d+)+", my_content):
-            #print(i)
             result.append(i.group())
+
         #find with S digit and deciaml
-        # for i in re.finditer(r"(\b[S][0-9]*\.[0-9]*)|\b[S][0-9]+", content):
-        #     print(i.group())
-        #     result.add(i.group()[1:])
-        for i in re.finditer(r"\b[S]\d{1,3}(?:,\d{3})*(?:\.\d+)+|\b[S]\d{1,3}(?:,\d{3})*", my_content):
-            # print(i.group())
+        for i in re.finditer(r"\b[S]\d{1,3}(?:,\d{3})*(?:\.\d+)+|\b[S]\d{1,3}(?:,\d{3})*", my_content):         
             result.append(i.group()[1:])
+
         # find with $ digit and decimal
-        # for i in re.finditer(r"\$\d+(?:\.\d+)?", content):
-        #     print(i.group())
-        #     result.add(i.group()[1:])
-        #for i in re.finditer(r"\$\d{1,3}(?:,\d{3})*(?:\.\d+)+|\$\d{1,3}(?:,\d{3})*", content):
         for i in re.finditer(r"\$\d{1,}(?:,\d{3})*(?:\.\d+)*|\$\d{1,3}(?:,\d{3})*", my_content):
-            # print(i.group())
             result.append(i.group()[1:])
         return result
 
@@ -93,12 +83,11 @@ class MoneyTransfers:
         if count>1:
             add_amounts = self.find_money_values(content, add_amounts)
             for i, value in enumerate(add_amounts):
-                add_amounts[i] = int(add_amounts[i])
+                add_amounts[i] = int(value)
             return [sum(add_amounts)]
         if 'watchlist' in content_lower:
             end = content_lower.find('watchlist')
             new_content1 = content_lower[:end]
-            # print(new_content1)
             result = self.find_money_values(new_content1, result)
         elif 'total' in content_lower:
             start = content_lower.find('total')
@@ -134,11 +123,12 @@ class MoneyTransfers:
         ie if it says paypal there is no need to check if there is blue.
         for cashapp, check if there is a username ($CashappName) before
         checking for the green color"""
-        dig_type_list = {"paypal", "cash", "coinbase", "portfolio", "asset", "btc", "message", "bnb", "želle", "mobile check", "gift card", "zelle"}
+        dig_type_list = {"paypal", "cash", "coinbase", "portfolio", "asset", "btc", 
+            "message", "bnb", "želle", "mobile check", "gift card", "zelle"}
         res = []
         content_lower = content.lower()
         pid = int(transfer.photo_id)
-        cd = color_dict[pid]
+        c_d = color_dict[pid]
         if 'limits' in content_lower and 'paypal' in content_lower:
             return['coinbase']
         for i in dig_type_list:
@@ -147,8 +137,8 @@ class MoneyTransfers:
         if res:
             if 'btc' in res:
                 j = 0
-                while j < len(cd):
-                    if cd[j+3] > cd[j+1] and cd[j+3] > cd[j+2]:
+                while j < len(c_d):
+                    if c_d[j+3] > c_d[j+1] and c_d[j+3] > c_d[j+2]:
                         res[0] = "Coinbase"
                         return res
                     j += 4
@@ -171,12 +161,12 @@ class MoneyTransfers:
             if email:
                 i = 0
                 r, g, b, = None, None, None
-                while i < len(cd):
-                    if cd[i+2] > cd[i+1] and cd[i+2] > cd[i+3]:
+                while i < len(c_d):
+                    if c_d[i+2] > c_d[i+1] and c_d[i+2] > c_d[i+3]:
                         g = True
-                    if cd[i+3] > cd[i+1] and cd[i+3] > cd[i+2]:
+                    if c_d[i+3] > c_d[i+1] and c_d[i+3] > c_d[i+2]:
                         b = True
-                    if cd[i+1] > cd[i+3] and cd[i+1] > cd[i+2]:
+                    if c_d[i+1] > c_d[i+3] and c_d[i+1] > c_d[i+2]:
                         r = True
                     i += 4
                 # print(r, " ", g, " ", b)
@@ -185,15 +175,15 @@ class MoneyTransfers:
                     res.append('paypal')
                     return res
             if not res:
-                # print(cd)
+                # print(c_d)
                 i = 0
                 r, g, b, = None, None, None
-                while i < len(cd):
-                    if cd[i+2] > cd[i+1] and cd[i+2] > cd[i+3]:
+                while i < len(c_d):
+                    if c_d[i+2] > c_d[i+1] and c_d[i+2] > c_d[i+3]:
                         g = True
-                    if cd[i+3] > cd[i+1] and cd[i+3] > cd[i+2]:
+                    if c_d[i+3] > c_d[i+1] and c_d[i+3] > c_d[i+2]:
                         b = True
-                    if cd[i+1] > cd[i+3] and cd[i+1] > cd[i+2]:
+                    if c_d[i+1] > c_d[i+3] and c_d[i+1] > c_d[i+2]:
                         r = True
                     i += 4
                 # print(r, " ", g, " ", b)
@@ -202,15 +192,15 @@ class MoneyTransfers:
                     res.append('Bank of America App')
                     return res
                 j = 0
-                while j < len(cd):
-                    if cd[j+2] > cd[j+1] and cd[j+2] > cd[j+3]:
+                while j < len(c_d):
+                    if c_d[j+2] > c_d[j+1] and c_d[j+2] > c_d[j+3]:
                         res.append('CashApp')
                         break
                     j += 4
                 if not res:
                     i = 0    
-                    while i < len(cd):
-                        if cd[i+3] > cd[i+1] and cd[i+3] > cd[i+2]:
+                    while i < len(c_d):
+                        if c_d[i+3] > c_d[i+1] and c_d[i+3] > c_d[i+2]:
                             res.append('Paypal')
                             break
                         i += 4
@@ -227,7 +217,8 @@ class MoneyTransfers:
 if __name__ == '__main__':
     folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Textfiles'
     textdoc_paths = base_parser.get_textdoc_paths(folder_textdoc_path)
-    headerList = ['Pic ID', 'Date', 'Money Transfer Application', 'Digital Payments', 'Digital Payment Type', 'Amount', 'Official Deposit']
+    headerList = ['Pic ID', 'Date', 'Money Transfer Application', 'Digital Payments', 
+        'Digital Payment Type', 'Amount', 'Official Deposit']
     with open('money_transfers1_file'+'.csv','w', newline='', encoding='utf-8') as f1:
         dw = csv.DictWriter(f1, delimiter=',', fieldnames=headerList)
         dw.writeheader()
@@ -235,12 +226,12 @@ if __name__ == '__main__':
     # for i in np.arange(0,9):
     #     row = data[i]
     #     writer.writerow(row)
-  
+
         for text_doc in textdoc_paths:
             writer=csv.writer(f1, delimiter=',')
             transfer = MoneyTransfers()
             file_name = os.path.basename(text_doc)
-            #print(file_name[-34:-4])
+
             #### parse photo id and date
             photo_id, date = transfer.get_date_and_id_from_title(file_name)
             if photo_id:
@@ -255,10 +246,7 @@ if __name__ == '__main__':
             else:
                 writer.writerow([transfer.photo_id, transfer.date, "", "", "", ""])
                 continue
-            #print((text_des).encode('utf-8'))
-            #print(text_des)
             digital_pay = transfer.digital_pay_type(text_des)
-            #print(digital_pay)
             if digital_pay:
                 if digital_pay[0] == "cash":
                     transfer.dig_payment_type = "CashApp"
@@ -279,18 +267,10 @@ if __name__ == '__main__':
             if content:
                 info_amount = transfer.transfer_amount(text_des)
                 if info_amount[0] == " ":
-                    print("im here")
                     transfer.amount = "no amount"
                 else:
-                    print("im here too")
                     transfer.amount = str(info_amount[0])
 
-            # for i,code in enumerate(check.zipcode):
-            #     writer.writerow()
-
-            #print(check.photo_id, check.date, check.bankname, check.zipcode, check.state, check.amount)
-            # writer.writerow([check.photo_id, check.date, check.bankname, check.zipcode, check.state, check.amount])
-            transfer.data_assign_rowby(transfer.photo_id, transfer.date, transfer.mt_application, transfer.dig_payment, transfer.dig_payment_type, transfer.amount, transfer.official_dep, writer)
-
-        # exit()
-        
+            transfer.data_assign_rowby(transfer.photo_id, transfer.date, transfer.mt_application,
+                transfer.dig_payment, transfer.dig_payment_type,
+                transfer.amount, transfer.official_dep, writer)
