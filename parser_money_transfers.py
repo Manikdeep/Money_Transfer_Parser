@@ -267,10 +267,21 @@ if __name__ == '__main__':
             if content:
                 info_amount = transfer.transfer_amount(text_des)
                 if info_amount[0] == " ":
-                    transfer.amount = "no amount"
+                    transfer.amount = 0
                 else:
-                    transfer.amount = str(info_amount[0])
-
+                    if isinstance(info_amount[0], str):
+                        if 'BTC' not in info_amount[0]:
+                            final = " "
+                            for i, value in enumerate(info_amount[0]):
+                                if value == ",":
+                                    continue
+                                else:
+                                    final += value
+                            transfer.amount = float(final)
+                        else:
+                            transfer.amount = info_amount[0]
+                    else:
+                        transfer.amount = float(info_amount[0])
             transfer.data_assign_rowby(transfer.photo_id, transfer.date, transfer.mt_application,
                 transfer.dig_payment, transfer.dig_payment_type,
                 transfer.amount, transfer.official_dep, writer)
