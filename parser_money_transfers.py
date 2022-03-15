@@ -3,29 +3,9 @@ import os
 import re
 import csv
 import base_parser
-# import OCR
-from colordict import color_dict
-  
-# Put 1 in Money Transfer Application and Digital Payments
-# Fixed BTC vs USD recognition for normal and 'Total' images
-# Fixed Facebook Shop recognition
-# Coinbase recognition:
-#   if BTC and blue dominant its coinbase, if not BTC and blue dominant, it's paypal
-# 5890 is bank of america phone app
-#   (check if there is a green, and blue dominant portion of the picture and has the word 'Success')
-# BNB Wallet = Binance
-# 19974 - Coinbase and Limits means amount is empty
-# 20187 - Bank Account so delete it
-# 20188 - Bank Account so delete it
-# 21267 - Put as giftcard
-# 21360 - Coinbase and Limits means amount is empty
-# Need Regex for email for paypal recognition 5881
-# Fixed Cashapp recognition for usernames that aren't captured properly. 17355
-# fixed price for coinbase 'watchlist' pictures 21285
-# 22387 wrong price shows up (Check before borrow appears in text)
-# remove brackets
+from OCR import colors_dict
 
-
+#If cloning from GitHub, make sure you change the file paths for the text files
 
 class MoneyTransfers:
     """money transfers class"""
@@ -128,7 +108,7 @@ class MoneyTransfers:
         res = []
         content_lower = content.lower()
         pid = int(transfer.photo_id)
-        c_d = color_dict[pid]
+        c_d = colors_dict[pid]
         if 'limits' in content_lower and 'paypal' in content_lower:
             return['coinbase']
         for i in dig_type_list:
@@ -215,6 +195,7 @@ class MoneyTransfers:
 
 
 if __name__ == '__main__':
+    # Update this path with the path to the text files on your system
     folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Textfiles'
     textdoc_paths = base_parser.get_textdoc_paths(folder_textdoc_path)
     headerList = ['Pic ID', 'Date', 'Money Transfer Application', 'Digital Payments', 
@@ -223,10 +204,6 @@ if __name__ == '__main__':
         dw = csv.DictWriter(f1, delimiter=',', fieldnames=headerList)
         dw.writeheader()
         writer=csv.writer(f1, delimiter=',')#lineterminator='\n',
-    # for i in np.arange(0,9):
-    #     row = data[i]
-    #     writer.writerow(row)
-
         for text_doc in textdoc_paths:
             writer=csv.writer(f1, delimiter=',')
             transfer = MoneyTransfers()

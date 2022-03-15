@@ -58,26 +58,16 @@ def detect_text(path, text_file_path):
          f.write(text_doc)        
     return text_doc
     
-# if __name__ == '__main__':
+# Update the following path with the correct path of the photos on your system
 folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Photos"
-#os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/jonat/GoogleAPIParserKey"
 img_paths = get_image_paths(folder_images_path)
 dirs = folder_images_path.split("/")
-# print(dirs)
 get_root_dir_img = "/".join([dirs[i] for i in range(0,len(dirs)-1)])
-# print(get_root_dir_img)
-#os.mkdir(get_root_dir_img+"/money_text")
+
 directory = "money_text"
 parent_dir = "C:/Users/jonat/OneDrive/Documents/VisualStudioRepositories/Money_Transfer_Parser"
 path = os.path.join(parent_dir, directory)
-#if not os.path.exists(get_root_dir_img+"/checks_text"):
-#    os.makedirs(get_root_dir_img+"/checks_text")
-# I commented the foloowing line out because I don't need to generate a new folder for text files
-#if not os.path.exists(path):
-# os.makedirs(path)
+
 for img_path in img_paths:
-    # print("Im here")
-    # detect_text(img_path, get_root_dir_img+"/transfers_text/")
+    # Get color information from pictures
     detect_properties(img_path)
-    # print(img_path)
-print(colors_dict)
