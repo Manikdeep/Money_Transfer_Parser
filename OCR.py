@@ -1,5 +1,4 @@
 import os
-import sys
 from google.cloud import vision
 import io
 
@@ -30,7 +29,7 @@ def detect_properties(path):
     photo = path[path.index('\\'):]
     id = photo[photo.index('_')+1: photo.index('@')]
     pic_id = int(id)
-    # print(pic_id)
+    print("getting color properties for ", pic_id)
     for color in props.dominant_colors.colors:
         if pic_id not in colors_dict:
             colors_dict[pic_id] = []
@@ -59,7 +58,8 @@ def detect_text(path, text_file_path):
     return text_doc
     
 # Update the following path with the correct path of the photos on your system
-folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Photos"
+# folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCS Research/TestPhotos"
+folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCS Research/MoneyTransferApps-Photos"
 img_paths = get_image_paths(folder_images_path)
 dirs = folder_images_path.split("/")
 get_root_dir_img = "/".join([dirs[i] for i in range(0,len(dirs)-1)])
@@ -71,3 +71,4 @@ path = os.path.join(parent_dir, directory)
 for img_path in img_paths:
     # Get color information from pictures
     detect_properties(img_path)
+# print(colors_dict)
