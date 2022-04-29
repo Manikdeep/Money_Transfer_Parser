@@ -39,7 +39,8 @@ def detect_properties(path):
         colors_dict[pic_id].append(color.color.blue)  
     return colors_dict
 
-def detect_text(path, text_file_path):
+# def detect_text(path, text_file_path):
+def detect_text(path):
     """Detects text in the file."""
     client = vision.ImageAnnotatorClient()
     with io.open(path, 'rb') as image_file:
@@ -53,13 +54,14 @@ def detect_text(path, text_file_path):
     for text in texts:        
         text_doc += text.description + " "
     file_name = os.path.basename(path).split(".")[0]
-    with open(text_file_path+file_name+'.txt','w', encoding='utf-8') as f:
-         f.write(text_doc)        
+    # with open(text_file_path+file_name+'.txt','w', encoding='utf-8') as f:
+    #      f.write(text_doc)  
+    print(text_doc)      
     return text_doc
-    
+   
 # Update the following path with the correct path of the photos on your system
-# folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCS Research/TestPhotos"
-folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCS Research/MoneyTransferApps-Photos"
+folder_images_path = "C:/Users/jonat/Downloads/Photos (2)/Photos"
+# folder_images_path = "C:/Users/jonat/OneDrive/Documents/French Pictures"
 img_paths = get_image_paths(folder_images_path)
 dirs = folder_images_path.split("/")
 get_root_dir_img = "/".join([dirs[i] for i in range(0,len(dirs)-1)])

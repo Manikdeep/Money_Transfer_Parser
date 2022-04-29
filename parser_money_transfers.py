@@ -5,8 +5,7 @@ import csv
 import base_parser
 from OCR import colors_dict
 # from color_dict import colors_dict
-
-#If cloning from GitHub, make sure you change the file paths for the text files
+# If cloning from GitHub, make sure you change the file paths for the text files
 
 class MoneyTransfers:
     """money transfers class"""
@@ -207,11 +206,10 @@ class MoneyTransfers:
         """assigns the values to the excel sheets"""
         writer.writerow([photo_id, date, mt_application, dig_payment, dig_payment_type, amount, official_dep])
 
-
 if __name__ == '__main__':
     # Update this path with the path to the text files on your system
     # REMOVE FILE AFTER USING IT
-    folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCS Research/MoneyTransferApps-Textfiles'
+    folder_textdoc_path = 'C:/Users/jonat/Downloads/Textfiles (2)/Textfiles'
     # folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCS Research/TestText'
     textdoc_paths = base_parser.get_textdoc_paths(folder_textdoc_path)
     headerList = ['Pic ID', 'Date', 'Money Transfer Application', 'Digital Payments', 
@@ -286,12 +284,12 @@ if __name__ == '__main__':
                 transfer.data_assign_rowby(transfer.photo_id, transfer.date, transfer.mt_application,
                 transfer.dig_payment, transfer.dig_payment_type,
                 transfer.amount, transfer.official_dep, writer)
-                del colors_dict[int(photo_id)]
-                del_file = 'C:/Users/jonat/OneDrive/Documents/EBCS Research/MoneyTransferApps-Textfiles/' + file_name
+                del_file = 'C:/Users/jonat/Downloads/Textfiles (2)/Textfiles/' + file_name
                 os.remove(del_file)
                 picture_file = file_name[0:-3] + "jpg"
-                the_picture_file = "C:/Users/jonat/OneDrive/Documents/EBCS Research/MoneyTransferApps-Photos/" + picture_file
+                the_picture_file = "C:/Users/jonat/Downloads/Photos (2)/Photos/" + picture_file
                 os.remove(the_picture_file)
+                del colors_dict[int(photo_id)]
         except Exception as e:
             print(e)
             print(colors_dict)
