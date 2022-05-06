@@ -58,9 +58,9 @@ def detect_text(path):
     #      f.write(text_doc)  
     print(text_doc)      
     return text_doc
-   
+    
 # Update the following path with the correct path of the photos on your system
-folder_images_path = "C:/Users/jonat/Downloads/Photos (2)/Photos"
+folder_images_path = "C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Photos3"
 # folder_images_path = "C:/Users/jonat/OneDrive/Documents/French Pictures"
 img_paths = get_image_paths(folder_images_path)
 dirs = folder_images_path.split("/")

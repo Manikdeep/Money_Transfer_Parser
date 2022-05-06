@@ -1,4 +1,5 @@
 """Money Transfer Parser"""
+from msilib.schema import Error
 import os
 import re
 import csv
@@ -209,7 +210,7 @@ class MoneyTransfers:
 if __name__ == '__main__':
     # Update this path with the path to the text files on your system
     # REMOVE FILE AFTER USING IT
-    folder_textdoc_path = 'C:/Users/jonat/Downloads/Textfiles (2)/Textfiles'
+    folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Textfiles3'
     # folder_textdoc_path = 'C:/Users/jonat/OneDrive/Documents/EBCS Research/TestText'
     textdoc_paths = base_parser.get_textdoc_paths(folder_textdoc_path)
     headerList = ['Pic ID', 'Date', 'Money Transfer Application', 'Digital Payments', 
@@ -218,8 +219,8 @@ if __name__ == '__main__':
         dw = csv.DictWriter(f1, delimiter=',', fieldnames=headerList)
         dw.writeheader()
         writer=csv.writer(f1, delimiter=',')# lineterminator='\n',
-        try:
-            for text_doc in textdoc_paths:
+        for text_doc in textdoc_paths:
+            try:
                 writer=csv.writer(f1, delimiter=',')
                 transfer = MoneyTransfers()
                 file_name = os.path.basename(text_doc)
@@ -284,12 +285,16 @@ if __name__ == '__main__':
                 transfer.data_assign_rowby(transfer.photo_id, transfer.date, transfer.mt_application,
                 transfer.dig_payment, transfer.dig_payment_type,
                 transfer.amount, transfer.official_dep, writer)
-                del_file = 'C:/Users/jonat/Downloads/Textfiles (2)/Textfiles/' + file_name
+                del_file = 'C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Textfiles3/' + file_name
                 os.remove(del_file)
                 picture_file = file_name[0:-3] + "jpg"
-                the_picture_file = "C:/Users/jonat/Downloads/Photos (2)/Photos/" + picture_file
+                the_picture_file = "C:/Users/jonat/OneDrive/Documents/EBCSphotosText/Photos3/" + picture_file
                 os.remove(the_picture_file)
                 del colors_dict[int(photo_id)]
-        except Exception as e:
-            print(e)
-            print(colors_dict)
+            except Exception as e:
+                # print(colors_dict)
+                print(repr(e))
+                print("Im in except")
+                print(transfer.photo_id)
+                pass
+        print(colors_dict)
